@@ -10,7 +10,7 @@
   "dependencies": {
     "firebase": "^9.19.0",
     "material-icons": "^1.13.3",
-    "pinia": "^2.0.33",
+    "pinia": "^2.0.34",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },

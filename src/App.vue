@@ -1,7 +1,14 @@
 <template>
     <header class="header">
-        <h1 class="header__logo">What Todo ?</h1>
-        <div class="header__menu">{{ userStore.user }}</div>
+        <h1 @click="isLog" class="header__logo">What Todo ?</h1>
+        <nav class="nav">
+            <ul class="nav__list">
+                <li v-if="username" class="nav__item"> {{ username }} </li>
+                <li v-if="username" class="nav__item"> Logout </li>
+                <li v-if="!username" class="nav__item"> Login </li>
+                <li v-if="!username" class="nav__item"> Register </li>
+            </ul>
+        </nav>
     </header>
 
     <main class="main">
@@ -10,9 +17,11 @@
 </template>
 
 <script setup>
-    import { useUserStore } from './stores/userStore'
+import { useUserStore } from './stores/userStore';
+import { storeToRefs } from 'pinia';
 
-    const userStore = useUserStore()
+const userStore = useUserStore();
+const { username } = storeToRefs(userStore)
 
 </script>
 
@@ -27,6 +36,14 @@
     &__logo {
         font-size: clamp(1.5rem, calc(1rem + 3vw), 4rem);
         font-family: 'Black Ops One', cursive;
+    }
+}
+
+.nav {
+    & > ul {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
     }
 }
 
