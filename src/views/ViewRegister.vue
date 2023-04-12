@@ -8,6 +8,7 @@
 
         <button> Register </button>
     </form>
+    <div class="go-to-login"> Already have an account ? <span @click="goToLogin"> Login </span></div>
     <div v-if="error"> {{ error }} </div>
 </template>
 
@@ -27,6 +28,10 @@ import { useRouter } from 'vue-router'
         if(!error.value) {
             router.push('/')
         }
+    }
+
+    const goToLogin = () => {
+        router.push('/login')
     }
 
 </script>

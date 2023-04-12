@@ -1,7 +1,7 @@
 <template>
     <div class="todo">
-        <i class="material-icons todo__fav" :class="{favorite: taskData.isFav}" @click="taskData.isFav = !taskData.isFav">favorite</i>
-        <span class="todo__task">{{ taskData.task }}</span>
+        <i class="material-icons todo__fav" :class="{favorite: taskData.isFav}" @click="$emit('add-to-fav', {id: taskData.id, fav: taskData.isFav})">favorite</i>
+        <span class="todo__task" @click="$emit('delete-task', taskData.id)">{{ taskData.task }}</span>
         <span class="todo__priority" :class="taskData.importance">{{ taskData.importance }}</span>
     </div>
 </template>
@@ -25,30 +25,22 @@
         justify-content: space-between;
         align-items: center;
         padding: 1rem;
-        background-color: rgba(63, 158, 236, 0.664);
+        background-color: rgba(63, 158, 236, 0.342);
         margin-bottom: 0.5rem;
         &__task:hover {
             text-decoration: line-through;
             cursor: pointer;
         }
 
-        &__task {
-
-        }
-
-        &__priority {
-
-        }
-
-        .Low {
+        .low {
             color: green;
         }
 
-        .Medium {
+        .medium {
             color: orange;
         }
 
-        .High {
+        .high {
             color: red
         }
     }

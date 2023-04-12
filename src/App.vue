@@ -4,9 +4,7 @@
         <nav class="nav">
             <ul class="nav__list">
                 <li v-if="username" class="nav__item"> {{ username }} </li>
-                <li v-if="username" class="nav__item"> Logout </li>
-                <li v-if="!username" class="nav__item"> Login </li>
-                <li v-if="!username" class="nav__item"> Register </li>
+                <li v-if="username" class="nav__item" @click="userLogout"> Logout </li>
             </ul>
         </nav>
     </header>
@@ -17,11 +15,25 @@
 </template>
 
 <script setup>
+import { signOut } from '@firebase/auth';
 import { useUserStore } from './stores/userStore';
 import { storeToRefs } from 'pinia';
+import { auth } from './assets/firebase/main';
+import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
-const { username } = storeToRefs(userStore)
+const { username, uid } = storeToRefs(userStore)
+const router = useRouter()
+
+const userLogout = () => {
+    signOut(auth).then(() => {
+        username.value = ""
+        uid.value = ""
+        router.push('/login')
+    }).catch(err => {
+
+    })
+}
 
 </script>
 

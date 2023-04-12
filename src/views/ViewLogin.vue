@@ -8,6 +8,7 @@
 
         <button> Login </button>
     </form>
+    <div class="go-to-register">No account yet ? <span @click="goToRegister"> Register </span></div>
     <div v-if="error"> {{ error }} </div>
 </template>
 
@@ -36,6 +37,10 @@ import { storeToRefs } from 'pinia'
             uid.value = auth.currentUser.uid
             router.push('/')
         }
+    }
+
+    const goToRegister = () => {
+        router.push('/register')
     }
 </script>
 
