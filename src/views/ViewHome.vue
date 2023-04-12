@@ -1,23 +1,26 @@
 <template>
-    <button @click="isAddOpen = !isAddOpen">Create New Todo</button>
+    <div class="wrapper">
+        <button class="" @click="isAddOpen = !isAddOpen">Create New Todo</button>
 
-    <form class="add-todo" @submit.prevent="handleAddingTodo(formData)" v-if="isAddOpen">
-        <label for="">Task: </label>
-        <input type="text" name="" id="" v-model="formData.task"><br>
+        <form class="add-todo" @submit.prevent="handleAddingTodo(formData)" v-if="isAddOpen">
+            <label for="task">Task: </label>
+            <input type="text" name="task" id="task" v-model="formData.task">
 
-        <label for="">Priority: </label>
-        <select name="" id="" v-model="formData.priority">
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select><br>
+            <label for="priority">Priority: </label>
+            <select name="priority" id="priority" v-model="formData.priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
 
-        <label for="">Due to: </label>
-        <input type="date" name="" id="" v-model="formData.date"><br>
+            <label for="">Due to: </label>
+            <input type="date" name="" id="" v-model="formData.date">
 
-        <button>Add Todo</button>
-    </form>
-    <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in tasks" :key="task.id" :taskData="task" />
+            <button>Add Todo</button>
+        </form>
+        <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in tasks" :key="task.id"
+            :taskData="task" />
+    </div>
 </template>
 
 <script setup>
@@ -60,7 +63,7 @@ const handleAddingTodo = async (d) => {
 
 const handleAddingToFav = async data => {
     const docRef = doc(db, uid.value, data.id)
-    
+
     await updateDoc(docRef, {
         isFav: !data.fav
     })
@@ -93,4 +96,23 @@ onMounted(async () => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+    .wrapper {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-content: center;
+
+        .add-todo {
+            display: flex;
+            flex-direction: column;
+            margin-inline: auto;
+
+            input, select{
+                max-width: 12rem;
+                align-self: stretch;
+            }
+        }
+    }
+
+</style>

@@ -1,10 +1,10 @@
 <template>
+    <h2>Login</h2>
     <form action="" name="login" class="login" @submit.prevent="handleLogin">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required v-model="email">
 
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required v-model="passwd">
+        <input type="email" name="email" id="email" required v-model="email" placeholder="email">
+
+        <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
 
         <button> Login </button>
     </form>

@@ -1,10 +1,12 @@
 <template>
     <form action="" name="register" class="register" @submit.prevent="handleRegister">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required v-model="email">
 
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required v-model="passwd">
+        <input type="email" name="email" id="email" required v-model="email" placeholder="email">
+
+        <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
+
+        <input type="password" name="repeatPassword" id="repeatPassword" required v-model="repPasswd"
+            placeholder="repeat password">
 
         <button> Register </button>
     </form>
@@ -17,25 +19,32 @@ import { ref } from 'vue';
 import useSignup from '../composables/userRegister'
 import { useRouter } from 'vue-router'
 
-    const email = ref(null)
-    const passwd = ref(null)
-    const { createUser, error } = useSignup()
-    const router = useRouter()
+const email = ref(null)
+const passwd = ref(null)
+const repPasswd = ref(null)
+const { createUser, error } = useSignup()
+const router = useRouter()
 
-    const handleRegister = async () => {
+const handleRegister = async () => {
+    try {
+        if (passwd.value !== repPasswd.value) {
+            throw new Error("both password fields have to match !")
+        }
         await createUser(email.value, passwd.value)
-        
-        if(!error.value) {
+
+        if (!error.value) {
             router.push('/')
         }
+    } catch(err) {
+        error.value = err.message
+    }
+        
     }
 
-    const goToLogin = () => {
-        router.push('/login')
-    }
+const goToLogin = () => {
+    router.push('/login')
+}
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

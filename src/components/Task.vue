@@ -27,6 +27,12 @@
         padding: 1rem;
         background-color: rgba(63, 158, 236, 0.342);
         margin-bottom: 0.5rem;
+
+        &__task {
+            max-width: 60%;
+            text-align: center;
+        }
+
         &__task:hover {
             text-decoration: line-through;
             cursor: pointer;

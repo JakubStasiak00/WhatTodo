@@ -1,6 +1,9 @@
+// reset //
+
 html {
     box-sizing: border-box;
     font-size: 16px;
+    font-family: Helvetica, sans-serif;
   }
   
   *, *:before, *:after {
@@ -20,4 +23,24 @@ html {
   img {
     max-width: 100%;
     height: auto;
+  }
+
+  // global styles //
+
+  input, select {
+    border: 3px grey solid;
+    outline: none;
+    padding: 0.4rem;
+    border-radius: 1rem;
+    display: block;
+    margin-block: 0.5rem;
+
+    &:focus {
+      border-color: rgb(7, 118, 192);
+    }
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
   }
