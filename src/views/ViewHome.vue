@@ -29,13 +29,14 @@ import { collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc } from '@fire
 import { useUserStore } from '../stores/userStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import { db } from '../assets/firebase/main';
+import { auth, db } from '../assets/firebase/main';
 import { onMounted, ref } from 'vue';
 import Task from '../components/Task.vue';
+import { onAuthStateChanged } from '@firebase/auth';
 
 const userStore = useUserStore();
-const router = useRouter()
 const { username, uid } = storeToRefs(userStore)
+const router = useRouter()
 const tasks = ref([])
 const isAddOpen = ref(false)
 const formData = ref({
@@ -43,10 +44,6 @@ const formData = ref({
     priority: '',
     date: null
 })
-
-if (!username.value) {
-    router.push('/login')
-}
 
 const handleAddingTodo = async (d) => {
     const collectionRef = collection(db, uid.value)
@@ -73,46 +70,46 @@ const handleDeletingTask = async id => {
     await deleteDoc(doc(db, uid.value, id))
 }
 
-onMounted(async () => {
-    if (!username.value) {
-        router.push('/login')
-    } else {
-        console.log(username, uid)
-        const taskRef = collection(db, uid.value)
-        const unsubscribe = onSnapshot(taskRef, querySnapshot => {
-            tasks.value = []
-            querySnapshot.forEach(doc => {
-                tasks.value.push({
-                    id: doc.id,
-                    task: doc.data().task,
-                    isFav: doc.data().isFav,
-                    dueTo: doc.data().dueTo,
-                    importance: doc.data().importance
-                })
+const loadTodos = async () => {
+    const taskRef = collection(db, uid.value)
+    const unsubscribe = onSnapshot(taskRef, querySnapshot => {
+        tasks.value = []
+        querySnapshot.forEach(doc => {
+            tasks.value.push({
+                id: doc.id,
+                task: doc.data().task,
+                isFav: doc.data().isFav,
+                dueTo: doc.data().dueTo,
+                importance: doc.data().importance
             })
         })
+    })
+}
+
+onAuthStateChanged(auth, user => {
+    if(user) {
+        loadTodos()
     }
 })
 
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
 
-    .wrapper {
-        display: grid;
-        grid-template-columns: 1fr;
-        justify-content: center;
+    .add-todo {
+        display: flex;
+        flex-direction: column;
+        margin-inline: auto;
 
-        .add-todo {
-            display: flex;
-            flex-direction: column;
-            margin-inline: auto;
-
-            input, select{
-                max-width: 12rem;
-                align-self: stretch;
-            }
+        input,
+        select {
+            max-width: 12rem;
+            align-self: stretch;
         }
     }
-
+}
 </style>

@@ -10,8 +10,6 @@
     const props = defineProps({
         taskData: Object
     })
-
-    console.log(props.taskData)
 </script>
 
 <style lang="scss" scoped>

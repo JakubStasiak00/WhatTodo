@@ -15,15 +15,29 @@
 </template>
 
 <script setup>
-import { signOut } from '@firebase/auth';
+import { onAuthStateChanged, signOut } from '@firebase/auth';
 import { useUserStore } from './stores/userStore';
 import { storeToRefs } from 'pinia';
 import { auth } from './assets/firebase/main';
 import { useRouter } from 'vue-router';
 
 const userStore = useUserStore();
-const { username, uid } = storeToRefs(userStore)
+const { username, uid, isAuth } = storeToRefs(userStore)
 const router = useRouter()
+
+onAuthStateChanged(auth, user => {
+    if(user){
+        username.value = auth.currentUser.email
+        uid.value = auth.currentUser.uid
+        isAuth.value = true
+    } else {
+        router.push('/login')
+    }
+})
+
+const isLog = () => {
+    console.log(auth.currentUser)
+}
 
 const userLogout = () => {
     signOut(auth).then(() => {
