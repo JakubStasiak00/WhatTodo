@@ -43,6 +43,7 @@ const userLogout = () => {
     signOut(auth).then(() => {
         username.value = ""
         uid.value = ""
+        isAuth.value = false
         router.push('/login')
     }).catch(err => {
 

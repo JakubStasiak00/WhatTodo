@@ -4,10 +4,10 @@
 
         <form class="add-todo" @submit.prevent="handleAddingTodo(formData)" v-if="isAddOpen">
             <label for="task">Task: </label>
-            <input type="text" name="task" id="task" v-model="formData.task">
+            <input required type="text" name="task" id="task" v-model="formData.task">
 
             <label for="priority">Priority: </label>
-            <select name="priority" id="priority" v-model="formData.priority">
+            <select required name="priority" id="priority" v-model="formData.priority">
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>

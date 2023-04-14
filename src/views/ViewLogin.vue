@@ -6,6 +6,7 @@
 
         <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
 
+        <label for="persist">Remember me</label>
         <input type="checkbox" name="persist" id="persist" v-model="isPersisting">
 
         <button> Login </button>
@@ -29,9 +30,8 @@ const passwd = ref(null)
 const { loginUser, error } = useLogin()
 const router = useRouter()
 const userStore = useUserStore()
-const { username, uid } = storeToRefs(userStore)
+const { username, uid, isAuth } = storeToRefs(userStore)
 const isPersisting = ref(false)
-
 
 const handleLogin = async () => {
     await loginUser(email.value, passwd.value)
@@ -48,6 +48,7 @@ const handleLogin = async () => {
         }
         username.value = auth.currentUser.email
         uid.value = auth.currentUser.uid
+        isAuth.value = true
         router.push('/')
     }
     catch (err) {
