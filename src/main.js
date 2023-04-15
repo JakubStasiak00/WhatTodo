@@ -10,8 +10,6 @@ import ViewRegister from './views/ViewRegister.vue'
 import './assets/styles/main.scss';
 import 'material-icons/iconfont/material-icons.css';
 
-import { auth } from './assets/firebase/main'
-
 const routes = [
     {
         name: 'ViewHome',
@@ -34,19 +32,6 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
-
-router.beforeEach((to, from, next) => {
-    auth.onAuthStateChanged(user => {
-      if (user && (to.path === '/login' || to.path === '/register')) {
-        next('/')
-        return
-      } else if (!user && to.path === '/' ) {
-        next('/login')
-        return
-      }
-      next()
-    })
-  })
 
 
 createApp(App).use(createPinia()).use(router).mount('#app')

@@ -16,11 +16,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import useSignup from '../composables/userRegister'
 import { useRouter } from 'vue-router'
 import { auth } from '../assets/firebase/main';
 import { useUserStore } from '../stores/userStore';
+import { onAuthStateChanged } from '@firebase/auth';
 
 const email = ref(null)
 const passwd = ref(null)
@@ -52,6 +53,18 @@ const handleRegister = async () => {
 const goToLogin = () => {
     router.push('/login')
 }
+
+const stateAuth = onAuthStateChanged(auth, user => {
+    if(!user){
+        console.log("ok")
+    } else {
+        router.push('/')
+    }
+})
+
+onBeforeUnmount(() => {
+    stateAuth()
+})
 
 </script>
 

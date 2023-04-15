@@ -17,13 +17,13 @@
 
 <script setup>
 
-import { ref } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 import useLogin from '../composables/userLogin'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/userStore'
 import { auth } from '../assets/firebase/main'
 import { storeToRefs } from 'pinia'
-import { browserLocalPersistence, setPersistence } from '@firebase/auth'
+import { browserLocalPersistence, onAuthStateChanged, setPersistence } from '@firebase/auth'
 
 const email = ref(null)
 const passwd = ref(null)
@@ -35,30 +35,24 @@ const isPersisting = ref(false)
 
 const handleLogin = async () => {
     await loginUser(email.value, passwd.value)
-
-    try {
-        if (isPersisting) {
-            setPersistence(auth, browserLocalPersistence)
-                .then(() => {
-                    console.log('persistance set succesfully')
-                })
-                .catch(err => {
-                    error.value = err.message
-                })
-        }
-        username.value = auth.currentUser.email
-        uid.value = auth.currentUser.uid
-        isAuth.value = true
-        router.push('/')
-    }
-    catch (err) {
-        error.value = err.message
-    }
 }
 
 const goToRegister = () => {
     router.push('/register')
 }
+
+const stateAuth = onAuthStateChanged(auth, user => {
+    if(!user){
+        console.log("ok")
+    } else {
+        router.push('/')
+    }
+})
+
+onBeforeUnmount(() => {
+    stateAuth()
+})
+
 </script>
 
 <style lang="scss" scoped></style>

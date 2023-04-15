@@ -25,16 +25,6 @@ const userStore = useUserStore();
 const { username, uid, isAuth } = storeToRefs(userStore)
 const router = useRouter()
 
-onAuthStateChanged(auth, user => {
-    if(user){
-        username.value = auth.currentUser.email
-        uid.value = auth.currentUser.uid
-        isAuth.value = true
-    } else {
-        router.push('/login')
-    }
-})
-
 const isLog = () => {
     console.log(auth.currentUser)
 }
@@ -49,6 +39,16 @@ const userLogout = () => {
 
     })
 }
+
+onAuthStateChanged(auth, user => {
+    if(user){
+        username.value = user.email
+        uid.value = user.uid
+        isAuth.value = true
+    } else {
+        router.push('/login')
+    }
+})
 
 </script>
 

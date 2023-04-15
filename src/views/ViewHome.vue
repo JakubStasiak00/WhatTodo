@@ -30,7 +30,7 @@ import { useUserStore } from '../stores/userStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { auth, db } from '../assets/firebase/main';
-import { onMounted, ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import Task from '../components/Task.vue';
 import { onAuthStateChanged } from '@firebase/auth';
 
@@ -70,8 +70,8 @@ const handleDeletingTask = async id => {
     await deleteDoc(doc(db, uid.value, id))
 }
 
-const loadTodos = async () => {
-    const taskRef = collection(db, uid.value)
+const loadTodos = async (uid) => {
+    const taskRef = collection(db, uid)
     const unsubscribe = onSnapshot(taskRef, querySnapshot => {
         tasks.value = []
         querySnapshot.forEach(doc => {
@@ -86,10 +86,16 @@ const loadTodos = async () => {
     })
 }
 
-onAuthStateChanged(auth, user => {
-    if(user) {
-        loadTodos()
+const stateAuth = onAuthStateChanged(auth, user => {
+    if(user){
+        loadTodos(user.uid)
+    } else {
+        router.push('/login')
     }
+})
+
+onBeforeUnmount(() => {
+    stateAuth()
 })
 
 </script>
