@@ -2,7 +2,7 @@
     <div class="todo">
         <i class="material-icons todo__fav" :class="{favorite: taskData.isFav}" @click="$emit('add-to-fav', {id: taskData.id, fav: taskData.isFav})">favorite</i>
         <span class="todo__task" @click="$emit('delete-task', taskData.id)">{{ taskData.task }}</span>
-        <span class="todo__priority" :class="taskData.importance">{{ taskData.importance }}</span>
+        <i class="material-icons-outlined todo-info">info</i>
     </div>
 </template>
 
@@ -25,6 +25,10 @@
         padding: 1rem;
         background-color: rgba(63, 158, 236, 0.342);
         margin-bottom: 0.5rem;
+
+        & > * {
+            cursor: pointer;
+        }
 
         &__task {
             max-width: 60%;

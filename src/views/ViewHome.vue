@@ -2,7 +2,7 @@
     <div class="wrapper">
         <button class="" @click="isAddOpen = !isAddOpen">Create New Todo</button>
 
-        <form class="add-todo" @submit.prevent="handleAddingTodo(formData)" v-if="isAddOpen">
+        <form class="add-todo" ref="addTodoForm" @submit.prevent="handleAddingTodo(formData)" v-if="isAddOpen">
             <label for="task">Task: </label>
             <input required type="text" name="task" id="task" v-model="formData.task">
 
@@ -18,7 +18,18 @@
 
             <button>Add Todo</button>
         </form>
-        <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in tasks" :key="task.id"
+        <div class="sortTodos">
+            <label for="searchBy">Search by:</label>
+            <select name="searchBy" id="searchBy" v-model="sortBy">
+                <option value=""></option>
+                <option value="priority">Priority</option>
+                <option value="name">Name</option>
+                <option value="date">Date</option>
+            </select>
+            <label for="showFavOnly">Show Favorites only</label>
+            <input type="checkbox" name="showFavOnly" id="showFavOnly" v-model="showFavOnly">
+        </div>
+        <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in formatedTasks" :key="task.id"
             :taskData="task" />
     </div>
 </template>
@@ -30,12 +41,13 @@ import { useUserStore } from '../stores/userStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { auth, db } from '../assets/firebase/main';
-import { onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import Task from '../components/Task.vue';
 import { onAuthStateChanged } from '@firebase/auth';
+import { computed } from '@vue/reactivity';
 
 const userStore = useUserStore();
-const { username, uid } = storeToRefs(userStore)
+const { uid } = storeToRefs(userStore)
 const router = useRouter()
 const tasks = ref([])
 const isAddOpen = ref(false)
@@ -43,6 +55,62 @@ const formData = ref({
     task: '',
     priority: '',
     date: null
+})
+const sortBy = ref('')
+const showFavOnly = ref(false)
+const addTodoForm = ref(null)
+
+const comparePrio = (a, b) => {
+    if ((a.importance === 'high' && b.importance !== 'high') || (a.importance === 'medium' && b.importance === 'low')) {
+        return -1
+    } else if ((b.importance === 'high' && a.importance !== 'high') || (b.importance === 'medium' && a.importance === 'low')) {
+        return 1
+    } else {
+        return 0
+    }
+}
+
+const compareName = (a, b) => {
+    let aTask = a.task
+    let bTask = b.task
+
+    aTask = typeof aTask === 'string' ? aTask.toLowerCase() : aTask.toString();
+    bTask = typeof bTask === 'string' ? bTask.toLowerCase() : bTask.toString();
+
+    return aTask.localeCompare(bTask);
+}
+
+const compareDate = (a, b) => {
+    let dateOne = a.dueTo.toDate().getTime()
+    let dateTwo = b.dueTo.toDate().getTime()
+
+    console.log(dateOne)
+
+    return dateOne - dateTwo
+}
+
+const formatedTasks = computed(() => {
+    let tasksBeforeFormat = [...tasks.value]
+    let tasksToFormat = [];
+
+    switch (sortBy.value) {
+        case 'priority': tasksToFormat = tasksBeforeFormat.sort(comparePrio)
+            break
+
+        case 'name': tasksToFormat = tasksBeforeFormat.sort(compareName)
+            break
+
+        case 'date': tasksToFormat = tasksBeforeFormat.filter(a => a.dueTo.toDate().getTime() > 1000).sort(compareDate) // filtering out dates that were assigned by firebase if user didnt choose due date
+            break
+
+        case '': tasksToFormat = tasks.value
+    }
+
+    if (showFavOnly.value) {
+        tasksToFormat = tasksToFormat.filter(a => a.isFav)
+    }
+
+    return tasksToFormat
 })
 
 const handleAddingTodo = async (d) => {
@@ -56,6 +124,14 @@ const handleAddingTodo = async (d) => {
         dueTo: dueDate,
         isFav: false
     })
+
+    formData.value = {
+        task: '',
+        priority: '',
+        date: null
+    }
+
+    isAddOpen.value = false
 }
 
 const handleAddingToFav = async data => {
@@ -87,7 +163,7 @@ const loadTodos = async (uid) => {
 }
 
 const stateAuth = onAuthStateChanged(auth, user => {
-    if(user){
+    if (user) {
         loadTodos(user.uid)
     } else {
         router.push('/login')
