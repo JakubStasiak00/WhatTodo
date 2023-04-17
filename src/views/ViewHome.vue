@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" v-if="uid">
         <button class="" @click="isAddOpen = !isAddOpen">Create New Todo</button>
 
         <form class="add-todo" ref="addTodoForm" @submit.prevent="handleAddingTodo(formData)" v-if="isAddOpen">
@@ -40,10 +40,9 @@ import { collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc } from '@fire
 import { useUserStore } from '../stores/userStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import { auth, db } from '../assets/firebase/main';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { db } from '../assets/firebase/main';
+import { ref, onBeforeMount } from 'vue';
 import Task from '../components/Task.vue';
-import { onAuthStateChanged } from '@firebase/auth';
 import { computed } from '@vue/reactivity';
 
 const userStore = useUserStore();
@@ -162,16 +161,12 @@ const loadTodos = async (uid) => {
     })
 }
 
-const stateAuth = onAuthStateChanged(auth, user => {
-    if (user) {
-        loadTodos(user.uid)
+onBeforeMount(() => {
+    if(uid.value) {
+        loadTodos(uid.value)
     } else {
         router.push('/login')
     }
-})
-
-onBeforeUnmount(() => {
-    stateAuth()
 })
 
 </script>

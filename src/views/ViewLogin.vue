@@ -1,36 +1,36 @@
 <template>
-    <h2>Login</h2>
-    <form action="" name="login" class="login" @submit.prevent="handleLogin">
+    <div class="wrap" v-if="!userStore.uid">
+        <h2>Login</h2>
+        <form action="" name="login" class="login" @submit.prevent="handleLogin">
 
-        <input type="email" name="email" id="email" required v-model="email" placeholder="email">
+            <input type="email" name="email" id="email" required v-model="email" placeholder="email">
 
-        <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
+            <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
 
-        <label for="persist">Remember me</label>
-        <input type="checkbox" name="persist" id="persist" v-model="isPersisting">
+            <label for="persist">Remember me</label>
+            <input type="checkbox" name="persist" id="persist" v-model="isPersisting">
 
-        <button> Login </button>
-    </form>
-    <div class="go-to-register">No account yet ? <span @click="goToRegister"> Register </span></div>
-    <div v-if="error"> {{ error }} </div>
+            <button> Login </button>
+        </form>
+        <div class="go-to-register">No account yet ? <span @click="goToRegister"> Register </span></div>
+        <div v-if="error"> {{ error }} </div>
+    </div>
 </template>
 
 <script setup>
 
 import { onBeforeUnmount, ref } from 'vue'
 import useLogin from '../composables/userLogin'
-import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/userStore'
+import { useRouter } from 'vue-router'
 import { auth } from '../assets/firebase/main'
-import { storeToRefs } from 'pinia'
-import { browserLocalPersistence, onAuthStateChanged, setPersistence } from '@firebase/auth'
+import { onAuthStateChanged } from '@firebase/auth'
 
+const userStore = useUserStore()
 const email = ref(null)
 const passwd = ref(null)
 const { loginUser, error } = useLogin()
 const router = useRouter()
-const userStore = useUserStore()
-const { username, uid, isAuth } = storeToRefs(userStore)
 const isPersisting = ref(false)
 
 const handleLogin = async () => {
@@ -42,9 +42,10 @@ const goToRegister = () => {
 }
 
 const stateAuth = onAuthStateChanged(auth, user => {
-    if(!user){
+    if (!user) {
         console.log("ok")
     } else {
+
         router.push('/')
     }
 })

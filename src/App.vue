@@ -1,7 +1,7 @@
 <template>
     <header class="header">
         <h1 @click="isLog" class="header__logo">What Todo ?</h1>
-        <nav class="nav">
+        <nav class="nav" >
             <ul class="nav__list">
                 <li v-if="username" class="nav__item"> {{ username }} </li>
                 <li v-if="username" class="nav__item" @click="userLogout"> Logout </li>
@@ -31,9 +31,7 @@ const isLog = () => {
 
 const userLogout = () => {
     signOut(auth).then(() => {
-        username.value = ""
-        uid.value = ""
-        isAuth.value = false
+        userStore.logout()
         router.push('/login')
     }).catch(err => {
 
@@ -42,9 +40,7 @@ const userLogout = () => {
 
 onAuthStateChanged(auth, user => {
     if(user){
-        username.value = user.email
-        uid.value = user.uid
-        isAuth.value = true
+        userStore.login(user.email, user.uid)
     } else {
         router.push('/login')
     }
@@ -59,6 +55,12 @@ onAuthStateChanged(auth, user => {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    position: sticky;
+    top: 0;
+    margin-bottom: 0.8rem;
+    z-index: 10;
+    background-color: rgb(88, 164, 235);
+    border-bottom: 2px solid rgb(42, 133, 185);
 
     &__logo {
         font-size: clamp(1.5rem, calc(1rem + 3vw), 4rem);
@@ -67,6 +69,7 @@ onAuthStateChanged(auth, user => {
 }
 
 .nav {
+    display: none;
     & > ul {
         display: flex;
         flex-direction: row;
@@ -94,6 +97,10 @@ onAuthStateChanged(auth, user => {
     .main {
         max-width: 30rem;
         box-shadow: 0px 5px 10px -5px rgba(66, 68, 90, 1);
+    }
+
+    .nav{
+        display: block;
     }
 }
 </style>
