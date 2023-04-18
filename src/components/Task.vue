@@ -1,15 +1,23 @@
 <template>
     <div class="todo">
         <i class="material-icons todo__fav" :class="{favorite: taskData.isFav}" @click="$emit('add-to-fav', {id: taskData.id, fav: taskData.isFav})">favorite</i>
-        <span class="todo__task" @click="$emit('delete-task', taskData.id)">{{ taskData.task }}</span>
-        <i class="material-icons-outlined todo-info">info</i>
+        <span class="todo__task" @click="$emit('delete-task', taskData.id)" :title="compiledDate ? shortenDate : text">{{ taskData.task }}</span>
+        <i class="material-icons-outlined todo-info" :class="taskData.importance" :title="taskData.importance">priority_high</i>
     </div>
 </template>
 
 <script setup>
+    import { ref } from 'vue';
+
     const props = defineProps({
         taskData: Object
     })
+
+    const compiledDate = props.taskData.dueTo.toDate().getTime()
+    const shortenDate = props.taskData.dueTo.toDate().toDateString()
+    const text = 'no Date was set'
+
+    const showInfo = ref(false)
 </script>
 
 <style lang="scss" scoped>
@@ -39,7 +47,7 @@
             text-decoration: line-through;
             cursor: pointer;
         }
-
+        
         .low {
             color: green;
         }

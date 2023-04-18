@@ -18,16 +18,20 @@
 
             <button>Add Todo</button>
         </form>
-        <div class="sortTodos">
-            <label for="searchBy">Search by:</label>
-            <select name="searchBy" id="searchBy" v-model="sortBy">
-                <option value=""></option>
-                <option value="priority">Priority</option>
-                <option value="name">Name</option>
-                <option value="date">Date</option>
-            </select>
-            <label for="showFavOnly">Show Favorites only</label>
-            <input type="checkbox" name="showFavOnly" id="showFavOnly" v-model="showFavOnly">
+        <div class="sort-todos">
+            <div>
+                <label for="searchBy">Search by:</label>
+                <select name="searchBy" id="searchBy" v-model="sortBy">
+                    <option value=""></option>
+                    <option value="priority">Priority</option>
+                    <option value="name">Name</option>
+                    <option value="date">Date</option>
+                </select>
+            </div>
+            <div>
+                <label for="showFavOnly">Favorites</label>
+                <input type="checkbox" name="showFavOnly" id="showFavOnly" v-model="showFavOnly">
+            </div>
         </div>
         <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in formatedTasks" :key="task.id"
             :taskData="task" />
@@ -162,7 +166,7 @@ const loadTodos = async (uid) => {
 }
 
 onBeforeMount(() => {
-    if(uid.value) {
+    if (uid.value) {
         loadTodos(uid.value)
     } else {
         router.push('/login')
@@ -186,6 +190,18 @@ onBeforeMount(() => {
         select {
             max-width: 12rem;
             align-self: stretch;
+        }
+    }
+
+    .sort-todos{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-items: center;
+
+        & > div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
     }
 }
