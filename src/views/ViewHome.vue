@@ -33,8 +33,7 @@
                 <input type="checkbox" name="showFavOnly" id="showFavOnly" v-model="showFavOnly">
             </div>
         </div>
-        <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in formatedTasks" :key="task.id"
-            :taskData="task" />
+            <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in formatedTasks" :key="task.id" :taskData="task" />
     </div>
 </template>
 
@@ -193,12 +192,12 @@ onBeforeMount(() => {
         }
     }
 
-    .sort-todos{
+    .sort-todos {
         display: grid;
         grid-template-columns: 1fr 1fr;
         justify-items: center;
 
-        & > div {
+        &>div {
             display: flex;
             align-items: center;
             gap: 0.5rem;

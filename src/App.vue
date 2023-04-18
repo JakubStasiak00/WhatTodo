@@ -1,7 +1,7 @@
 <template>
     <header class="header">
         <h1 @click="isLog" class="header__logo">What Todo ?</h1>
-        <nav class="nav" >
+        <nav class="nav inside-header">
             <ul class="nav__list">
                 <li v-if="username" class="nav__item"> {{ username }} </li>
                 <li v-if="username" class="nav__item" @click="userLogout"> Logout </li>
@@ -10,6 +10,12 @@
     </header>
 
     <main class="main">
+        <nav class="nav inside-main">
+            <ul class="nav__list">
+                <li v-if="username" class="nav__item"> {{ username }} </li>
+                <li v-if="username" class="nav__item" @click="userLogout"> Logout </li>
+            </ul>
+        </nav>
         <RouterView />
     </main>
 </template>
@@ -69,7 +75,6 @@ onAuthStateChanged(auth, user => {
 }
 
 .nav {
-    display: none;
     & > ul {
         display: flex;
         flex-direction: row;
@@ -77,6 +82,13 @@ onAuthStateChanged(auth, user => {
     }
 }
 
+.inside-header {
+    display: none;
+}
+
+.inside-main > ul{
+    justify-content: space-evenly;
+}
 .main {
     margin: 0 auto;
     width: 100%;
@@ -99,8 +111,12 @@ onAuthStateChanged(auth, user => {
         box-shadow: 0px 5px 10px -5px rgba(66, 68, 90, 1);
     }
 
-    .nav{
+    .inside-header{
         display: block;
+    }
+
+    .inside-main {
+        display: none;
     }
 }
 </style>
