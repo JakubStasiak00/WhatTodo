@@ -1,8 +1,12 @@
 <template>
     <div class="todo">
         <i class="material-icons todo__fav" :class="{favorite: taskData.isFav}" @click="$emit('add-to-fav', {id: taskData.id, fav: taskData.isFav})">favorite</i>
-        <span class="todo__task" @click="$emit('delete-task', taskData.id)" :title="compiledDate ? shortenDate : text">{{ taskData.task }}</span>
-        <i class="material-icons-outlined todo-info" :class="taskData.importance" :title="taskData.importance">priority_high</i>
+        <span class="todo__task" @click="$emit('delete-task', taskData.id)" >{{ taskData.task }}</span>
+        <i class="material-icons-outlined todo-info" @click="toggleInfo" :class="taskData.importance">info</i>
+    </div>
+    <div class="additional-info" v-if="showInfo">
+        <div><span> Priority: </span> {{ taskData.importance }} </div>
+        <div v-if="isDate"><span> Due to: </span> {{ formatDate }}</div>
     </div>
 </template>
 
@@ -13,11 +17,23 @@
         taskData: Object
     })
 
-    const compiledDate = props.taskData.dueTo.toDate().getTime()
-    const shortenDate = props.taskData.dueTo.toDate().toDateString()
-    const text = 'no Date was set'
+    const emits = defineEmits(['add-to-fav', 'delete-task'])
 
+    const isDate = ref(false)
+    const formatDate = ref('')
+
+    const hasDate = () =>{
+        if(props.taskData.dueTo){
+            isDate.value = true
+            formatDate.value = props.taskData.dueTo
+        }
+    }
     const showInfo = ref(false)
+
+    const toggleInfo = () => {
+        hasDate()
+        showInfo.value = !showInfo.value
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -58,6 +74,18 @@
 
         .high {
             color: red
+        }
+    }
+
+    .additional-info {
+        display: flex;
+        justify-content: space-evenly;
+        border-bottom: 1px solid black;
+        padding-block: 0.5rem ;
+        margin-bottom: 0.5rem;
+        span {
+            color: #4529c2;
+            font-weight: bold;
         }
     }
 </style>

@@ -20,7 +20,7 @@
         </form>
         <div class="sort-todos">
             <div>
-                <label for="searchBy">Search by:</label>
+                <label for="searchBy">Sort by:</label>
                 <select name="searchBy" id="searchBy" v-model="sortBy">
                     <option value=""></option>
                     <option value="priority">Priority</option>
@@ -83,8 +83,8 @@ const compareName = (a, b) => {
 }
 
 const compareDate = (a, b) => {
-    let dateOne = a.dueTo.toDate().getTime()
-    let dateTwo = b.dueTo.toDate().getTime()
+    let dateOne = new Date(a.dueTo)
+    let dateTwo = new Date(b.dueTo)
 
     console.log(dateOne)
 
@@ -102,7 +102,7 @@ const formatedTasks = computed(() => {
         case 'name': tasksToFormat = tasksBeforeFormat.sort(compareName)
             break
 
-        case 'date': tasksToFormat = tasksBeforeFormat.filter(a => a.dueTo.toDate().getTime() > 1000).sort(compareDate) // filtering out dates that were assigned by firebase if user didnt choose due date
+        case 'date': tasksToFormat = tasksBeforeFormat.filter(a => a.dueTo).sort(compareDate) // filtering out dates that were assigned by firebase if user didnt choose due date
             break
 
         case '': tasksToFormat = tasks.value
@@ -117,15 +117,21 @@ const formatedTasks = computed(() => {
 
 const handleAddingTodo = async (d) => {
     const collectionRef = collection(db, uid.value)
-    const dueDate = new Date(d.date)
-    console.log(d, dueDate, collectionRef)
 
-    await setDoc(doc(collectionRef), {
+    if(d.date) {
+        await setDoc(doc(collectionRef), {
         task: d.task,
         importance: d.priority,
-        dueTo: dueDate,
+        dueTo: d.date,
         isFav: false
     })
+    } else {
+        await setDoc(doc(collectionRef), {
+        task: d.task,
+        importance: d.priority,
+        isFav: false
+    })
+    }
 
     formData.value = {
         task: '',

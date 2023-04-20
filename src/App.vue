@@ -109,6 +109,10 @@ onAuthStateChanged(auth, user => {
     .main {
         max-width: 30rem;
         box-shadow: 0px 5px 10px -5px rgba(66, 68, 90, 1);
+        
+        &:has(.wrap){
+            margin-top: 20vh
+        }
     }
 
     .inside-header{

@@ -7,12 +7,9 @@
 
             <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
 
-            <label for="persist">Remember me</label>
-            <input type="checkbox" name="persist" id="persist" v-model="isPersisting">
-
             <button> Login </button>
         </form>
-        <div class="go-to-register">No account yet ? <span @click="goToRegister"> Register </span></div>
+        <div class="go-to-register">No account yet ? <router-link to="/register"> Register </router-link></div>
         <div v-if="error"> {{ error }} </div>
     </div>
 </template>
@@ -31,14 +28,9 @@ const email = ref(null)
 const passwd = ref(null)
 const { loginUser, error } = useLogin()
 const router = useRouter()
-const isPersisting = ref(false)
 
 const handleLogin = async () => {
     await loginUser(email.value, passwd.value)
-}
-
-const goToRegister = () => {
-    router.push('/register')
 }
 
 const stateAuth = onAuthStateChanged(auth, user => {
@@ -56,4 +48,16 @@ onBeforeUnmount(() => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+.wrap {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input, button {
+        width: 100%;
+    }
+}
+</style>

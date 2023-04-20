@@ -1,18 +1,20 @@
 <template>
-    <h2> Register </h2>
-    <form action="" name="register" class="register" @submit.prevent="handleRegister">
+    <div class="wrap">
+        <h2> Register </h2>
+        <form action="" name="register" class="register" @submit.prevent="handleRegister">
 
-        <input type="email" name="email" id="email" required v-model="email" placeholder="email">
+            <input type="email" name="email" id="email" required v-model="email" placeholder="email">
 
-        <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
+            <input type="password" name="password" id="password" required v-model="passwd" placeholder="password">
 
-        <input type="password" name="repeatPassword" id="repeatPassword" required v-model="repPasswd"
-            placeholder="repeat password">
+            <input type="password" name="repeatPassword" id="repeatPassword" required v-model="repPasswd"
+                placeholder="repeat password">
 
-        <button> Register </button>
-    </form>
-    <div class="go-to-login"> Already have an account ? <span @click="goToLogin"> Login </span></div>
-    <div v-if="error"> {{ error }} </div>
+            <button> Register </button>
+        </form>
+        <div class="go-to-login"> Already have an account ? <router-link to="/login"> Login </router-link></div>
+        <div v-if="error"> {{ error }} </div>
+    </div>
 </template>
 
 <script setup>
@@ -50,12 +52,8 @@ const handleRegister = async () => {
 
 }
 
-const goToLogin = () => {
-    router.push('/login')
-}
-
 const stateAuth = onAuthStateChanged(auth, user => {
-    if(!user){
+    if (!user) {
         console.log("ok")
     } else {
         router.push('/')
@@ -68,4 +66,16 @@ onBeforeUnmount(() => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.wrap {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    input,
+    button {
+        width: 100%;
+    }
+}
+</style>
