@@ -3,8 +3,8 @@
         <h1 @click="isLog" class="header__logo">What Todo ?</h1>
         <nav class="nav inside-header">
             <ul class="nav__list">
-                <li v-if="username" class="nav__item"> {{ username }} </li>
-                <li v-if="username" class="nav__item" @click="userLogout"> Logout </li>
+                <li v-if="username" class="nav__item"><i class="material-icons">person</i> {{ username }} </li>
+                <li v-if="username" class="nav__item" @click="userLogout"><i class="material-icons">logout</i> Logout </li>
             </ul>
         </nav>
     </header>
@@ -12,8 +12,8 @@
     <main class="main">
         <nav class="nav inside-main">
             <ul class="nav__list">
-                <li v-if="username" class="nav__item"> {{ username }} </li>
-                <li v-if="username" class="nav__item" @click="userLogout"> Logout </li>
+                <li v-if="username" class="nav__item"><i class="material-icons">person</i> {{ username }} </li>
+                <li v-if="username" class="nav__item" @click="userLogout"><i class="material-icons">logout</i> Logout </li>
             </ul>
         </nav>
         <RouterView />
@@ -79,6 +79,20 @@ onAuthStateChanged(auth, user => {
         display: flex;
         flex-direction: row;
         gap: 1rem;
+    }
+
+    & li {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.2rem;
+    }
+
+    & li:last-child {
+        color: rgb(243, 81, 81);
+    }
+
+    & li:first-child {
+        color: rgb(46, 134, 46);
     }
 }
 
