@@ -34,10 +34,7 @@ const handleLogin = async () => {
 }
 
 const stateAuth = onAuthStateChanged(auth, user => {
-    if (!user) {
-        console.log("ok")
-    } else {
-
+    if (user) {
         router.push('/')
     }
 })

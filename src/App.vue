@@ -4,7 +4,7 @@
         <nav class="nav inside-header">
             <ul class="nav__list">
                 <li v-if="username" class="nav__item"><i class="material-icons">person</i> {{ username }} </li>
-                <li v-if="username" class="nav__item" @click="userLogout"><i class="material-icons">logout</i> Logout </li>
+                <li v-if="username" class="nav__item" @click="userLogout"><i class="material-icons">power_settings_new</i></li>
             </ul>
         </nav>
     </header>
@@ -13,7 +13,7 @@
         <nav class="nav inside-main">
             <ul class="nav__list">
                 <li v-if="username" class="nav__item"><i class="material-icons">person</i> {{ username }} </li>
-                <li v-if="username" class="nav__item" @click="userLogout"><i class="material-icons">logout</i> Logout </li>
+                <li v-if="username" class="nav__item" @click="userLogout"><i class="material-icons">power_settings_new</i></li>
             </ul>
         </nav>
         <RouterView />
@@ -66,7 +66,8 @@ onAuthStateChanged(auth, user => {
     margin-bottom: 0.8rem;
     z-index: 10;
     background-color: rgb(88, 164, 235);
-    border-bottom: 2px solid rgb(42, 133, 185);
+    border-bottom: 1px solid rgb(42, 133, 185);
+    box-shadow: 0px 0px 5px 1px rgba(66, 68, 90, 1);
 
     &__logo {
         font-size: clamp(1.5rem, calc(1rem + 3vw), 4rem);
@@ -92,7 +93,7 @@ onAuthStateChanged(auth, user => {
     }
 
     & li:first-child {
-        color: rgb(46, 134, 46);
+        color: rgb(49, 112, 49);
     }
 }
 
@@ -101,7 +102,7 @@ onAuthStateChanged(auth, user => {
 }
 
 .inside-main > ul{
-    justify-content: space-evenly;
+    justify-content: center;
 }
 .main {
     margin: 0 auto;
