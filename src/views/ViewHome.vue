@@ -106,7 +106,7 @@ const formatedTasks = computed(() => {
         case 'date': tasksToFormat = tasksBeforeFormat.filter(a => a.dueTo).sort(compareDate) // filtering out dates that were assigned by firebase if user didnt choose due date
             break
 
-        case 'favourites': tasksToFormat = tasksBeforeFormat.sort((a, b )=> (a.isFav ? -1 : 1)) // filtering out dates that were assigned by firebase if user didnt choose due date
+        case 'favourites': tasksToFormat = tasksBeforeFormat.sort((a)=> (a.isFav ? -1 : 1)) // filtering out dates that were assigned by firebase if user didnt choose due date
             break
 
         case '': tasksToFormat = tasks.value

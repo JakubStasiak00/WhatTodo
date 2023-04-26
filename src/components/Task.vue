@@ -1,8 +1,11 @@
 <template>
     <div class="todo">
-        <i class="material-icons todo__fav" :class="{favorite: taskData.isFav}" @click="$emit('add-to-fav', {id: taskData.id, fav: taskData.isFav})">favorite</i>
-        <span class="todo__task" @click="$emit('delete-task', taskData.id)" >{{ taskData.task }}</span>
-        <i class="material-icons-outlined todo-info" @click="toggleInfo" :class="taskData.importance">info</i>
+        <div class="todo__icons">
+            <i class="material-icons todo__fav" :class="{favorite: taskData.isFav}" @click="$emit('add-to-fav', {id: taskData.id, fav: taskData.isFav})">favorite</i>
+            <i class="material-icons-outlined todo-info" @click="toggleInfo" :class="taskData.importance">info</i>
+        </div>
+        <span class="todo__task">{{ taskData.task }}</span>
+        <i class="material-icons-outlined todo__delete" @click="$emit('delete-task', taskData.id)">delete</i>
     </div>
     <div class="additional-info" v-if="showInfo">
         <div><span> Priority: </span> {{ taskData.importance }} </div>
@@ -42,26 +45,33 @@
     }
 
     .todo {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
         align-items: center;
         padding: 1rem;
         background-color: rgba(63, 158, 236, 0.342);
         margin-bottom: 0.5rem;
+        gap: 1.5rem;
 
-        & > * {
+        &  i {
             cursor: pointer;
+        }
+
+        &  i:hover {
+            transform: scale(1.2);
         }
 
         &__task {
-            max-width: 60%;
             text-align: center;
+        }   
+
+        &__icons {
+            display: flex;
+            gap: 0.5rem;
         }
 
-        &__task:hover {
-            text-decoration: line-through;
-            cursor: pointer;
+        &__delete:hover {
+            color: red;
         }
         
         .low {
