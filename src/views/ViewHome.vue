@@ -24,13 +24,14 @@
                 <select name="searchBy" id="searchBy" v-model="sortBy">
                     <option value=""></option>
                     <option value="priority">Priority</option>
+                    <option value="favourites">Favourites</option>
                     <option value="name">Name</option>
                     <option value="date">Date</option>
                 </select>
             </div>
             <div>
-                <label for="showFavOnly">Favorites</label>
-                <input type="checkbox" name="showFavOnly" id="showFavOnly" v-model="showFavOnly">
+                <label for="findTask">Search:</label>
+                <input type="input" name="findTask" id="findTask" v-model="findTask">
             </div>
         </div>
             <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in formatedTasks" :key="task.id" :taskData="task" />
@@ -59,7 +60,7 @@ const formData = ref({
     date: null
 })
 const sortBy = ref('')
-const showFavOnly = ref(false)
+const findTask = ref('')
 const addTodoForm = ref(null)
 
 const comparePrio = (a, b) => {
@@ -105,11 +106,14 @@ const formatedTasks = computed(() => {
         case 'date': tasksToFormat = tasksBeforeFormat.filter(a => a.dueTo).sort(compareDate) // filtering out dates that were assigned by firebase if user didnt choose due date
             break
 
+        case 'favourites': tasksToFormat = tasksBeforeFormat.sort((a, b )=> (a.isFav ? -1 : 1)) // filtering out dates that were assigned by firebase if user didnt choose due date
+            break
+
         case '': tasksToFormat = tasks.value
     }
 
-    if (showFavOnly.value) {
-        tasksToFormat = tasksToFormat.filter(a => a.isFav)
+    if (findTask.value) {
+        tasksToFormat = tasksToFormat.filter(a => a.task.toLowerCase().includes(findTask.value.toLowerCase()))
     }
 
     return tasksToFormat
