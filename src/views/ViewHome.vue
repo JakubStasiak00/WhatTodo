@@ -20,18 +20,16 @@
         </form>
         <div class="sort-todos">
             <div>
-                <label for="searchBy">Sort by:</label>
                 <select name="searchBy" id="searchBy" v-model="sortBy">
-                    <option value=""></option>
+                    <option value="">Sort by:</option>
                     <option value="priority">Priority</option>
                     <option value="favourites">Favourites</option>
                     <option value="name">Name</option>
                     <option value="date">Date</option>
                 </select>
             </div>
-            <div>
-                <label for="findTask">Search:</label>
-                <input type="input" name="findTask" id="findTask" v-model="findTask">
+            <div class="search__Todos">
+                <input type="input" name="findTask" id="findTask" placeholder="search" v-model="findTask">
             </div>
         </div>
             <Task @add-to-fav="handleAddingToFav" @delete-task="handleDeletingTask" v-for="task in formatedTasks" :key="task.id" :taskData="task" />
@@ -208,9 +206,15 @@ onBeforeMount(() => {
         justify-items: center;
 
         &>div {
+            width: 100%;
+            padding: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        & input, & select {
+            width: 100%;
         }
     }
 }
